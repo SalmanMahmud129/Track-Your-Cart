@@ -1,6 +1,7 @@
 
 import Form from '@/components/form/Form'
 import firebase, { initializeApp } from 'firebase/app'
+import { getDatabase , ref, push } from 'firebase/database'
 import 'firebase/database'
 
 const firebaseConfig = {
@@ -9,6 +10,8 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig)
+const database = getDatabase(app)
+const itemsInDB = ref(database, "items")
 
 
 export default function Home() {
@@ -17,7 +20,7 @@ export default function Home() {
     <div > 
       hello
       <div className='flex py-10 '>
-        <Form />
+        <Form database={database} itemsInDB={itemsInDB} push={push} />
 
       </div>
 

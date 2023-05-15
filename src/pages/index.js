@@ -32,7 +32,16 @@ export default function Home() {
     //then we map through the subarrays where the first element is the id and second is the singleItem (through destructuring)
     //the map then returns an array of objects where each object has the id and singleItem
     
+
     onValue(itemsInDB, (snapshot) =>{
+      
+      // deleting the last item will delete the reference to items in the database,
+      // when the reference no longer exists, the onvalue function fails which means we 
+      // dont get back a snapshot, if we dont get back a snapshot it means we deleted the last item and should set the items state to empty
+      if(!snapshot.exists()){
+        setItems([])
+      }
+
       const data = snapshot.val()
       console.log('data', data)
 
@@ -52,22 +61,18 @@ export default function Home() {
 
   console.log('items', items)
   return (
-    <div > 
-      hello
-      <div className=' flex mx-auto justify-center'>
-      <div>
+    <div className='flex min-h-screen'> 
+      <div className='flex flex-col m-auto items-center min-w-full'>
+      
         <Form database={database} itemsInDB={itemsInDB} push={push} />
         
-      
-      <ul className='bg-gray-200 flex flex-wrap flex-grow rounded-md mt-6 border-t-2 border-black p-4 text-center text-xl justify-center max-w-sm'>
+      {items.length > 0 ? <ul className='bg-gray-200 overflow-y-scroll md:h-60 flex flex-wrap rounded-md mt-6 border-t-2 border-black p-4 text-center text-xl max-w-xs min-w-[20rem]'>
         {items.map((item) => {
-          return <li onClick={() => removeFromDb(item)} className='rounded-md bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 m-2 py-2 px-4 hover:scale-110 transition duration-300' key={item.id}>{item.singleItem}</li>
+          return <li onClick={() => removeFromDb(item)} className='text-white rounded-md bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 mx-auto my-1 p-2 hover:scale-110 hover:from-red-500 hover:to-red-500 hover:text-black hover:cursor-pointer transition duration-300' key={item.id}>{item.singleItem}</li>
         })}
 
-      </ul>
-
-      </div>
-
+      </ul> : null }
+    
       </div>
 
     </div>
